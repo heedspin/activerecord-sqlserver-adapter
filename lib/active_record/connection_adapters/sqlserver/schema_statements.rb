@@ -446,6 +446,10 @@ module ActiveRecord
                        else ci[:type]
                        end
                 value = default.match(/\A\((.*)\)\Z/m)[1]
+                # Tim hack:  Was trying to cast a '' to a numeric.  Force to use 0.0 instead of ''.
+                if ((type.starts_with? 'numeric') and (value == "''"))
+                  value = '0.0'
+                end
                 value = select_value("SELECT CAST(#{value} AS #{type}) AS value", 'SCHEMA')
                 [value, nil]
               end
